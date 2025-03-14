@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: myapp
-        image: grafana/grafanat
+        image: grafana/grafana
         ports:
         - containerPort: 3000
 
