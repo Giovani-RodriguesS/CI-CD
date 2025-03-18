@@ -1,0 +1,16 @@
+resources:
+- ../../base
+namespace: dev
+namePrefix: dev-
+patches:
+- |-
+  apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    name: app
+  spec:
+    replicas: 1
+images:
+- name: app
+  image: grafana/grafana
+  newTag: latest
