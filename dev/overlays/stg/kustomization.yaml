@@ -8,6 +8,9 @@ patches:
     name: myapp
   patch: |-
     - op: replace
+      path: /spec/replicas
+      value: 2
+    - op: replace
       path: /spec/template/spec/containers/0/image
       value: nginx
     - op: replace

@@ -3,14 +3,16 @@ resources:
 namespace: dev
 namePrefix: dev-
 patches:
-- |-
-  apiVersion: apps/v1
-  kind: Deployment
-  metadata:
-    name: app
-  spec:
-    replicas: 1
-images:
-- name: app
-  image: grafana/grafana
-  newTag: latest
+- target:
+    kind: Deployment
+    name: myapp
+  patch: |-
+    - op: replace
+      path: /spec/replicas
+      value: 2
+    - op: replace
+      path: /spec/template/spec/containers/0/image
+      value: grafana/grafana
+    - op: replace
+      path: /spec/template/spec/containers/0/ports/0/containerPort
+      value: 3000
