@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-db
+spec:
+  template:
+    spec:
+      containers:
+      - name: postgres
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "1234"
+        - name: POSTGRES_USER 
+          value: "postgres"
+        - name: POSTGRES_DB
+          value: "postgres"
