@@ -15,4 +15,4 @@ spec:
   selector:
     matchLabels:
       app: go-api
-  replicas: 1
+  replicas: 5
