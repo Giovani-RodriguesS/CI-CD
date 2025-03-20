@@ -1,21 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: application-dev
+  name: application-argocd
   namespace: argocd
 spec:
   project: default
   source:
-    repoURL: https://github.com/Giovani-RodriguesS/CI-CD.git 
+    repoURL: https://github.com/Giovani-RodriguesS/CI-CD.git
     targetRevision: HEAD
-    path: dev/overlays/dev
+    path: cd-config/
   destination:
     server: https://kubernetes.default.svc 
-    namespace: dev
+    namespace: argocd
 
   syncPolicy:
     syncOptions:
-    - CreateNamespace=true
     automated:
       selfHeal: true
       prune: true

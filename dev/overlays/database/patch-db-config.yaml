@@ -14,3 +14,15 @@ spec:
           value: "postgres"
         - name: POSTGRES_DB
           value: "postgres"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 3Gi
+  storageClassName: standard

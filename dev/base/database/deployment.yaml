@@ -17,6 +17,9 @@ spec:
         image: postgres:12
         ports:
         - containerPort: 5432
+        volumeMounts:
+        - name: db-storage
+          mountPath: /var/lib/postgresql/data
         env:
         - name: POSTGRES_PASSWORD
           value: "0000"
@@ -31,3 +34,7 @@ spec:
           limits:
             cpu: "400m"
             memory: "512Mi"
+      volumes:
+      - name: db-storage
+        persistentVolumeClaim:
+          claimName: db-pvc
