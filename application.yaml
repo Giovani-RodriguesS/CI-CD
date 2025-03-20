@@ -8,8 +8,7 @@ spec:
   source:
     repoURL: https://github.com/Giovani-RodriguesS/CI-CD.git
     targetRevision: HEAD
-    path: cd-config/database
-    path: cd-config/dev
+    path: cd-config/
   destination:
     server: https://kubernetes.default.svc 
     namespace: argocd
