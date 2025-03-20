@@ -3,7 +3,9 @@ kind: ConfigMap
 metadata:
   name: api-config
 data:
-  DB_URL: "host=db-service.database.svc.cluster.local port=5432 user=postgres password=1234 dbname=loja sslmode=disable"
+  DB_URL: "host=db-service.database.svc.cluster.local port=5432 user=postgres password=1234 sslmode=disable"
+  DB_SELECTED: "loja"
+  ENV: "dev"
 ---
 apiVersion: apps/v1
 kind: Deployment

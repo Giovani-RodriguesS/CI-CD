@@ -19,11 +19,21 @@ spec:
         - containerPort: 8080
         
         env:
+        - name: ENV
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: "ENV"
         - name: DB_URL
           valueFrom:
             configMapKeyRef:
               name: api-config
               key: "DB_URL"
+        - name: DB_SELECTED
+          valueFrom:
+            configMapKeyRef:
+              name: api-config
+              key: "DB_SELECTED"
         resources:
           requests:
             cpu: "100m"
