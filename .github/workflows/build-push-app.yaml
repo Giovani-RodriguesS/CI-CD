@@ -22,8 +22,9 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> $GITHUB_ENV  
-          cd app/api || "Erro ao mudar de diretório"
-          echo $DOCKER_USERNAME
-          docker build -t $DOCKER_USERNAME/ci-api-go . || echo "Erro ao fazer o Build"
-          docker push $DOCKER_USERNAME/ci-api-go || echo "Erro ao enviar Imagem para Repo remoto"
+          IMAGE_NAME="${{ secrets.DOCKER_USERNAME }}/ci-api-go"
+          IMAGE_TAG="latest"
+
+          cd app/api || { echo "Erro ao mudar de diretório"; exit 1 }
+          docker build -t "${IMAGE_NAME}:${IMAGE_TAG}" . || { echo "Erro ao fazer o Build"; exit 1 }
+          docker push "${IMAGE_NAME}:${IMAGE_TAG}" || { echo "Erro ao enviar Imagem para Repo remoto"; exit 1 }
