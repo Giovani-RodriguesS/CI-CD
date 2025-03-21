@@ -24,5 +24,6 @@ jobs:
         run: |
           echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" >> $GITHUB_ENV  
           cd app/api || "Erro ao mudar de diretório"
-          docker build -t $DOCKER_USERNAME/ci-api-go:latest . || echo "Erro ao fazer o Build"
-          docker push $DOCKER_USERNAME/ci-api-go:latest || echo "Erro ao enviar Imagem para Repo remoto"
+          echo $DOCKER_USERNAME
+          docker build -t $DOCKER_USERNAME/ci-api-go . || echo "Erro ao fazer o Build"
+          docker push $DOCKER_USERNAME/ci-api-go || echo "Erro ao enviar Imagem para Repo remoto"
