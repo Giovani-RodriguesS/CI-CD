@@ -27,4 +27,4 @@ jobs:
 
           cd app/api || { echo "Erro ao mudar de diretório"; exit 1; }
           docker build -t "${IMAGE_NAME}:${IMAGE_TAG}" . || { echo "Erro ao fazer o Build"; exit 1; };
-          docker push "${IMAGE_NAME}:${IMAGE_TAG}" || { echo "Erro ao enviar Imagem para Repo remoto"; exit 1 }
+          docker push "${IMAGE_NAME}:${IMAGE_TAG}" || { echo "Erro ao enviar Imagem para Repo remoto"; exit 1; }
