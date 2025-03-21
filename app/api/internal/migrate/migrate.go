@@ -9,5 +9,5 @@ func init() {
 }
 
 func main() {
-	initializers.DB.AutoMigrate(&model.Product{}, &model.User{})
+	initializers.DB.AutoMigrate(&model.Product{})
 }
