@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/Giovani-RodriguesS/CI-CD.git
     targetRevision: HEAD
-    path: cd-config/
+    path: env-config/
     directory:
       recurse: true
   destination:
