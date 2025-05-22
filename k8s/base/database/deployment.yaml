@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-db
+  template:
+    metadata:
+      labels:
+        app: go-db
+    spec:
+      containers:
+      - name: postgres
+        image: postgres:12
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: db-storage
+          mountPath: /var/lib/postgresql/data
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "0000"
+        - name: POSTGRES_USER 
+          value: "null"
+        - name: POSTGRES_DB
+          value: "null"
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "256Mi"
+          limits:
+            cpu: "400m"
+            memory: "512Mi"
+      volumes:
+      - name: db-storage
+        persistentVolumeClaim:
+          claimName: db-pvc
