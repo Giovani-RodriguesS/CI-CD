@@ -10,6 +10,7 @@ import (
 func LoadEnvVars() {
 	value := os.Getenv("ENV")
 
+	// Não é local
 	if value != "local" {
 		return
 	}
