@@ -1,3 +1,3 @@
-
+*.env
 *view.json
 *tls.*
