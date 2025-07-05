@@ -89,11 +89,7 @@ Além disso, busquei implementar um **Proxy Reverso** como ponto de entrada e pa
   kubectl apply -f application.yaml
   ```
 
-4. Configure o ingresso em `ingress/`:
-   ```bash
-   kubectl apply -f ingress/ingresses.yaml
-   ```
+4. Configure o tarefik em [docs/traefik/](docs\traefik\README.md)
 
-## Uso
 ## Licença
 MIT
