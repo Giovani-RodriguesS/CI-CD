@@ -23,28 +23,28 @@ kubectl create secret tls local-selfsigned-tls \
   --namespace traefik
 ```
 
-Crie um `values.yaml` arquivo com o seguinte conteúdo:
+Crie um `traefik-values.yaml` arquivo com o seguinte conteúdo:
 ```yaml
-# Configurar portas de rede e pontos de entrada
-# Os EntryPoints são os ouvintes de rede para o tráfego de entrada.
+# Configure Network Ports and EntryPoints
+# EntryPoints are the network listeners for incoming traffic.
 ports:
-  # Define o ponto de entrada HTTP denominado 'web'
+  # Defines the HTTP entry point named 'web'
   web:
-    port: 80
+    port: 8087
     nodePort: 30000
-    # Instrui este ponto de entrada a redirecionar todo o tráfego para o ponto de entrada 'websecure'
+    # Instructs this entry point to redirect all traffic to the 'websecure' entry point
     redirections:
       entryPoint:
         to: websecure
         scheme: https
         permanent: true
 
-  # Define o ponto de entrada HTTPS denominado 'websecure'
+  # Defines the HTTPS entry point named 'websecure'
   websecure:
-    port: 443
+    port: 8443
     nodePort: 30001
 
-# Habilita o painel no Modo Seguro
+# Enables the dashboard in Secure Mode
 api:
   dashboard: true
   insecure: false
@@ -57,8 +57,8 @@ ingressRoute:
       - websecure
     middlewares:
       - name: dashboard-auth
-
-# Cria um Middleware BasiAuth e um Segredo para a Segurança do Painel
+ 
+# Creates a BasiAuth Middleware and Secret for the Dashboard Security
 extraObjects:
   - apiVersion: v1
     kind: Secret
@@ -67,7 +67,7 @@ extraObjects:
     type: kubernetes.io/basic-auth
     stringData:
       username: admin
-      password: "P@ssw0rd"
+      password: "123456789"      # Replace with an Actual Password
   - apiVersion: traefik.io/v1alpha1
     kind: Middleware
     metadata:
@@ -76,12 +76,12 @@ extraObjects:
       basicAuth:
         secret: dashboard-auth-secret
 
-# Em vez disso, faremos o roteamento com a API Gateway.
+# We will route with Gateway API instead.
 ingressClass:
   enabled: false
 
-# Habilita o Provedor de API do Gateway e desabilita o provedor KubernetesIngress
-# Os provedores informam ao Traefik onde encontrar a configuração de roteamento.
+# Enable Gateway API Provider & Disables the KubernetesIngress provider
+# Providers tell Traefik where to find routing configuration.
 providers:
   kubernetesIngress:
      enabled: false
@@ -91,40 +91,40 @@ providers:
 ## Gateway Listeners
 gateway:
   listeners:
-    web: # Ouvinte HTTP que corresponde ao entryPoint `web`
-      port: 80
+    web:           # HTTP listener that matches entryPoint `web`
+      port: 8087
       protocol: HTTP
       namespacePolicy: All
 
-    websecure:         # Ouvinte HTTPS que corresponde ao entryPoint `websecure`
-      port: 443
-      protocol: HTTPS  # TLS termina dentro do Traefik
+    websecure:         # HTTPS listener that matches entryPoint `websecure`
+      port: 8443
+      protocol: HTTPS  # TLS terminates inside Traefik
       namespacePolicy: All
       mode: Terminate
       certificateRefs:    
         - kind: Secret
-          name: local-selfsigned-tls  # O segredo que criamos antes da instalação
+          name: local-selfsigned-tls  # the Secret we created before the installation
           group: ""
 
-# Habilita Observabilidade
+# Enable Observability
 logs:
   general:
     level: INFO
-  # Isso habilita os logs de acesso, enviando-os para a saída padrão do Traefik por padrão. A [Documentação de Logs de Acesso](https://doc.traefik.io/traefik/observability/access-logs/) aborda formatação, filtragem e opções de saída.
+  # This enables access logs, outputting them to Traefik's standard output by default. The [Access Logs Documentation](https://doc.traefik.io/traefik/observability/access-logs/) covers formatting, filtering, and output options.
   access:
     enabled: true
 
-# Habilita métricas para Prometheus
+# Enables Prometheus for Metrics
 metrics:
   prometheus:
-    enabled: true
+    enabled: true 
 ```
 
 Agora instale a aplicação usando o Helm e os valores pré-definidos no arquivo acima:
 ```bash
 helm install traefik traefik/traefik \
   --namespace traefik \
-  --values values.yaml
+  --values traefik-values.yaml
 ```
 
 ### Configuração de Roteamento:
@@ -133,26 +133,28 @@ Configure o encaminhamento de tráfego:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: whoami
-  namespace: traefik
+  name: go-api-service
+  namespace: dev # Namespace da aplicação
 spec:
   parentRefs:
-    - name: traefik-gateway # Nome do Gateway que o Traefik cria quando você habilita o provedor da API do Gateway
+  - name: traefik-gateway
+    namespace: traefik
   hostnames:
-    - "whoami.docker.localhost"
+    - "go.docker.localhost"
+  # Regras de roteamento
   rules:
     - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
-        - name: whoami
-          port: 80
+      - path:
+          type: PathPrefix
+          value: /products
+    - backendRefs:
+      - name: go-api-service # Nome do serviço de backend
+        port: 8080
 ```
 
 Implantando HttpRoute
 ```bash
-kubectl apply -f httproute.yaml
+kubectl apply -f route-go.yaml
 ```
 ### Observações
 - Nesse exemplo, implante o Gateway no **mesmo namespace** dos serviços que serão expostos
