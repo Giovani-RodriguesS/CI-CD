@@ -21,7 +21,7 @@ func main() {
 	ProductUsecase := usecase.NewProductUseCase(ProductRepository)
 	// cria um controlador que expõe a lógica de negócio via endpoints HTTP.
 	ProductController := controller.NewProductController(ProductUsecase)
-	  server := router.Router(&ProductController)
+	server := router.Router(&ProductController)
 
 	server.Run()
 }

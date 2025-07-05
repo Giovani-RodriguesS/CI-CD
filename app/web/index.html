@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Product API Client</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 2rem;
+      background-color: #f4f4f4;
+    }
+    h1 {
+      color: #333;
+    }
+    form, .results {
+      background: white;
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    input, button {
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .btn-group button {
+      width: 24%;
+      margin-right: 1%;
+    }
+    .btn-group button:last-child {
+      margin-right: 0;
+    }
+    pre {
+      background: #eee;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Product Manager</h1>
+
+<form id="product-form">
+  <label>
+    Name:
+    <input type="text" id="name" required />
+  </label>
+  <label>
+    Price:
+    <input type="number" step="0.01" id="price" required />
+  </label>
+  <label>
+    Quantity:
+    <input type="number" id="quantity" required />
+  </label>
+  <label>
+    ID (for update/delete):
+    <input type="text" id="productId" />
+  </label>
+  <div class="btn-group">
+    <button type="button" onclick="getProducts()">GET</button>
+    <button type="button" onclick="createProduct()">POST</button>
+    <button type="button" onclick="updateProduct()">PUT</button>
+    <button type="button" onclick="deleteProduct()">DELETE</button>
+  </div>
+</form>
+
+<div class="results">
+  <h2>Response</h2>
+  <pre id="response"></pre>
+</div>
+
+<script>
+  const baseUrl = "http://localhost:8080/products";
+
+  function showResponse(data) {
+    document.getElementById("response").textContent = JSON.stringify(data, null, 2);
+  }
+
+  async function getProducts() {
+    try {
+      const res = await fetch(baseUrl);
+      const data = await res.json();
+      showResponse(data);
+    } catch (err) {
+      showResponse({ error: err.toString() });
+    }
+  }
+
+  async function createProduct() {
+    const name = document.getElementById("name").value;
+    const price = parseFloat(document.getElementById("price").value);
+    const quantity = parseInt(document.getElementById("quantity").value);
+
+    try {
+      const res = await fetch(`${baseUrl}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, price, quantity })
+      });
+      const data = await res.json();
+      showResponse(data);
+    } catch (err) {
+      showResponse({ error: err.toString() });
+    }
+  }
+
+  async function updateProduct() {
+    const id = document.getElementById("productId").value;
+    const name = document.getElementById("name").value;
+    const price = parseFloat(document.getElementById("price").value);
+    const quantity = parseInt(document.getElementById("quantity").value);
+
+    if (!id) {
+      showResponse({ error: "Product ID is required for update." });
+      return;
+    }
+
+    try {
+      const res = await fetch(`${baseUrl}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, price, quantity })
+      });
+      const data = await res.json();
+      showResponse(data);
+    } catch (err) {
+      showResponse({ error: err.toString() });
+    }
+  }
+
+  async function deleteProduct() {
+    const id = document.getElementById("productId").value;
+
+    if (!id) {
+      showResponse({ error: "Product ID is required for delete." });
+      return;
+    }
+
+    try {
+      const res = await fetch(`${baseUrl}/${id}`, {
+        method: "DELETE"
+      });
+      const data = await res.json();
+      showResponse(data);
+    } catch (err) {
+      showResponse({ error: err.toString() });
+    }
+  }
+</script>
+
+</body>
+</html>
