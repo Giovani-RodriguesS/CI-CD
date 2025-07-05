@@ -14,6 +14,7 @@ func ConnectDB() {
 	var err error
 	initConn := os.Getenv("DB_URL")
 
+	fmt.Print(initConn)
 	// Conectando ao banco de dados para ver se há base de dados
 	DB, err = gorm.Open(postgres.Open(initConn), &gorm.Config{})
 
