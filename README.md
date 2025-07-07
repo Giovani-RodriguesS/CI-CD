@@ -19,6 +19,7 @@ Além disso, busquei implementar um **Proxy Reverso** como ponto de entrada e pa
 
 ## Estrutura do Projeto
 
+- **.github**: Configuração dos workflows do GitHub Actions
 - **app/**: Código da API Go.
   - **api/**: Contém `Dockerfile`, `go.mod`, `go.sum`, código principal (`cmd/main.go`), e pacotes internos (`controller/`, `initializers/`, `migrate/`, `model/`, `repository/`, `router/`, `usecase/`, `utils/`).
   - **readme.md**: Documentação da aplicação.
@@ -26,30 +27,24 @@ Além disso, busquei implementar um **Proxy Reverso** como ponto de entrada e pa
 - **config/**: Configurações de ambiente.
   - **database/**: Configurações do banco de dados (`application.yaml`).
   - **dev/**: Configurações do ambiente de desenvolvimento (`application.yaml`).
-- **ingress/**: Configurações do Ingress.
-  - **ingresses.yaml**: Definições do Ingress no K8s.
-  - **traefik/**: Configurações do Traefik (`account.yaml`, `kustomization.yaml`, `role-binding.yaml`, `role.yaml`, `traefik-services.yaml`, `traefik.yaml`).
+- **traefik/**:
 - **k8s/**: Manifestos Kubernetes.
   - **base/**: Configurações base para aplicação (`app/`) e banco de dados (`database/`), com `configmap.yaml`, `deployment.yaml`, `service.yaml`, `kustomization.yaml`, `netPolicy.yaml`, `secret.yaml`.
   - **overlays/**: Sobreposições para ambientes (`database/`, `dev/`, `stg/`), com `kustomization.yaml`, `namespace.yaml`, e patches.
-- **tests/**: Configurações de testes.
-  - **sonarqube/**: Integração com SonarQube (`docker-compose.yaml`, `sonar-scanner.sh`).
+- **tests/**: Testes de cUrl local (GET, POST, PUT e DELETE)
 
 ## Pré-requisitos
 
 - Kubernetes (Kind)
-- ArgoCD
 - Go (versão 1.23)
-- Banco de dados relacional (PostgreSQL)
-- SonarQube
-- Traefik
 - Docker DeskTop
 
 ## Instalação
 
 1. Clone o repositório:
    ```bash
-   git clone <URL_DO_REPOSITORIO>
+   git clone <URL_DO_REPOSITORIO> 
+   cd CI/CD
    ```
 2. Configure o cluster Kubernetes local.
 - Instale o ArgoCD:
@@ -89,7 +84,7 @@ Além disso, busquei implementar um **Proxy Reverso** como ponto de entrada e pa
   kubectl apply -f application.yaml
   ```
 
-4. Configure o tarefik em [docs/traefik/](docs\traefik\README.md)
+4. Configure o traefik em [docs/traefik/](docs\traefik\README.md)
 
 ## Licença
 MIT
